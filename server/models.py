@@ -10,7 +10,18 @@ metadata = MetaData(naming_convention={
 
 db = SQLAlchemy(metadata=metadata)
 
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.String(200), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+    item_id = db.Column(db.Integer, db.ForeignKey('item.id'), nullable=False)
 
+    customer = db.relationship('Customer', backref='reviews')
+    item = db.relationship('Item', backref='reviews')
+
+    def __repr__(self):
+        return f'<Review {self.id}>'
+    
 class Customer(db.Model):
     __tablename__ = 'customers'
 
@@ -30,3 +41,4 @@ class Item(db.Model):
 
     def __repr__(self):
         return f'<Item {self.id}, {self.name}, {self.price}>'
+
